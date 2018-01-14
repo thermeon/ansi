@@ -162,8 +162,22 @@ func colorCode(style string) *bytes.Buffer {
 		}
 	}
 
-	buf.WriteString(start)
 	base := normalIntensityFG
+	if len(fgStyle) > 0 {
+		if strings.Contains(fgStyle, "h") {
+			base = highIntensityFG
+		}
+	}
+
+	buf.WriteString(start)
+	// if 256-color
+	n, err := strconv.Atoi(fgKey)
+	if err == nil {
+		fmt.Fprintf(buf, "38;5;%d;", n)
+	} else {
+		fmt.Fprintf(buf, "%d;", base+fg)
+	}
+
 	if len(fgStyle) > 0 {
 		if strings.Contains(fgStyle, "b") {
 			buf.WriteString(bold)
@@ -180,18 +194,8 @@ func colorCode(style string) *bytes.Buffer {
 		if strings.Contains(fgStyle, "s") {
 			buf.WriteString(strikethrough)
 		}
-		if strings.Contains(fgStyle, "h") {
-			base = highIntensityFG
-		}
 	}
 
-	// if 256-color
-	n, err := strconv.Atoi(fgKey)
-	if err == nil {
-		fmt.Fprintf(buf, "38;5;%d;", n)
-	} else {
-		fmt.Fprintf(buf, "%d;", base+fg)
-	}
 	buf.Truncate(buf.Len() - 1)
 	buf.WriteRune('m')
 
