@@ -192,9 +192,13 @@ func colorCode(style string) *bytes.Buffer {
 	} else {
 		fmt.Fprintf(buf, "%d;", base+fg)
 	}
+	buf.Truncate(buf.Len() - 1)
+	buf.WriteRune('m')
 
+	// Can't reliably do SGR foreground and background in one set
 	base = normalIntensityBG
 	if len(bg) > 0 {
+		buf.WriteString(start)
 		if strings.Contains(bgStyle, "h") {
 			base = highIntensityBG
 		}
@@ -205,11 +209,11 @@ func colorCode(style string) *bytes.Buffer {
 		} else {
 			fmt.Fprintf(buf, "%d;", base+Colors[bg])
 		}
+		// remove last ";"
+		buf.Truncate(buf.Len() - 1)
+		buf.WriteRune('m')
 	}
 
-	// remove last ";"
-	buf.Truncate(buf.Len() - 1)
-	buf.WriteRune('m')
 	return buf
 }
 

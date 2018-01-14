@@ -2,18 +2,20 @@
 
 Package ansi is a small, fast library to create ANSI colored strings and codes.
 
+Forked by thermeon to fix multi-component setting, which might be unique to our env.
+
 ## Install
 
 Get it
 
 ```sh
-go get -u github.com/mgutz/ansi
+go get -u github.com/thermeon/ansi
 ```
 
 ## Example
 
 ```go
-import "github.com/mgutz/ansi"
+import "github.com/thermeon/ansi"
 
 // colorize a string, SLOW
 msg := ansi.Color("foo", "red+b:white")
